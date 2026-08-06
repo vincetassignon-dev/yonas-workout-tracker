@@ -1,4 +1,4 @@
-const CACHE_NAME = "yonas-alpha-031-structured";
+const CACHE_NAME = "yonas-alpha-032-structured";
 
 const APP_SHELL = [
   "./",
