@@ -1,18 +1,33 @@
-YONAS WORKOUT TRACKER V2
+YONAS WORKOUT TRACKER — ALPHA 0.3.2
 
 QUICK USE
-- Open index.html.
-- The app works as a normal offline webpage.
+- Open index.html (or visit the hosted GitHub Pages URL).
 - Workout data is stored only in that browser/device.
 - Use Settings > Export backup regularly.
 
-PHONE LIMITATION
-- Android can usually open the HTML file from a file manager, though browser behavior differs.
-- iPhone/iOS does not reliably run or install a PWA directly from a local ZIP/file.
-- “Add to Home Screen” and full PWA installation normally require the files to be served over HTTPS or localhost.
-- No hosting is required to use the HTML on a computer. For a true home-screen app on iPhone, some form of serving is unavoidable.
+PROJECT STRUCTURE
 
-FILES
-- index.html: app
-- config.json: exercises and client name
-- manifest.json + service-worker.js: PWA files for future hosted/local-server use
+/
+├── index.html
+├── manifest.json
+├── service-worker.js
+├── version.json
+├── assets/
+│   ├── css/app.css
+│   └── js/app.js
+└── data/
+    └── config.json
+
+WHAT LIVES WHERE
+- index.html: page structure and embedded fallback config
+- assets/css/app.css: layout, colours and responsive styling
+- assets/js/app.js: application logic and local storage
+- data/config.json: splits and exercises (single source of truth)
+- service-worker.js: offline caching and application updates
+- version.json: deployed application version
+- manifest.json: home-screen/PWA metadata
+
+PHONE / PWA
+- Full PWA install and "Add to Home Screen" require HTTPS or localhost.
+- Opening index.html directly on a computer works without hosting.
+- iPhone/iOS does not reliably install a PWA from a local file.
