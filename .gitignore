@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Local exports and backups
+exports/
+backups/
+*.backup
+*.bak
+
+# Local user data
+local-data/
+*.local.json
+*.local.csv
+
+# Editor folders
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
