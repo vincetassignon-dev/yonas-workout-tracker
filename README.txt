@@ -1,4 +1,4 @@
-YONAS WORKOUT TRACKER — ALPHA 0.3.2
+WORKOUT TRACKER — ALPHA 0.3.3
 
 QUICK USE
 - Open index.html (or visit the hosted GitHub Pages URL).

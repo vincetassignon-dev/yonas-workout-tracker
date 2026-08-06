@@ -14,7 +14,7 @@ This document describes behavior verified in the current repository. Planned wor
 
 ## Predefined Three-Split Workout Program
 
-**Purpose:** Give Yonas a ready-to-use strength program.
+**Purpose:** Provide a ready-to-use strength program.
 
 **Current behavior:** Split A, B, and C each contain six configured exercises grouped as a main lift, supersets, and a finisher. Configuration loads from `data/config.json`, with embedded fallback configuration in `index.html` if loading fails.
 
@@ -26,17 +26,17 @@ This document describes behavior verified in the current repository. Planned wor
 
 **Purpose:** Record weight and repetitions for each workout and guide the next session.
 
-**Current behavior:** A user selects a split, enters one weight and repetitions for three sets per exercise, and saves the complete workout. Saved workouts receive an ISO timestamp. After saving, the app advances to the next configured split. The Home view shows the next split, workout count, last split, and personal-record count.
+**Current behavior:** A user selects a split, enters one weight and repetitions for three sets per exercise, and saves the workout. A completely empty workout requires confirmation; partially completed workouts save normally. Saved workouts receive an ISO timestamp. After saving, the app advances to the next configured split. The Home view shows the next split, workout count, last split, and personal-record count.
 
 **Relevant files/modules:** Workout, split-rotation, and Home sections of `assets/js/app.js`; workout markup in `index.html`.
 
-**Current limitations:** Saving does not require or validate entries, and there is no interface to edit or delete an individual saved workout.
+**Current limitations:** Field values are not otherwise validated, and there is no interface to edit or delete an individual saved workout.
 
 ## Local Workout Storage
 
 **Purpose:** Keep workout data on the device without requiring an account or server.
 
-**Current behavior:** Workout logs and the selected split are stored in browser LocalStorage under `yonasLog` and `yonasSplit`.
+**Current behavior:** Workout logs, the selected split, and the unit preference are stored in browser LocalStorage under `workoutLog`, `workoutSplit`, and `workoutUnits`.
 
 **Relevant files/modules:** State, storage, workout-saving, import, and clear-data logic in `assets/js/app.js`.
 
@@ -76,21 +76,21 @@ This document describes behavior verified in the current repository. Planned wor
 
 **Purpose:** Allow users to create and restore a portable local backup.
 
-**Current behavior:** Settings can export a JSON file containing the workout log, current split, and configuration. A selected JSON backup can restore the log and current split.
+**Current behavior:** Settings can export a JSON file containing the workout log, current split, unit preference, and configuration. A selected JSON backup can restore the log, current split, and unit preference. Backups created before the separate unit field remain compatible through the configuration value.
 
 **Relevant files/modules:** Backup controls in `index.html`; export/import and download logic in `assets/js/app.js`.
 
-**Current limitations:** Import performs minimal validation and does not apply the configuration included in the exported backup. The UI is not fully rerendered immediately after import.
+**Current limitations:** Import performs minimal validation and does not apply the full configuration included in the exported backup.
 
 ## Units Display Selection
 
 **Purpose:** Let the user choose whether workout weight fields are labeled in kilograms or pounds.
 
-**Current behavior:** Settings offers `kg` and `lb`; changing it updates the in-memory configuration and rerenders workout weight labels.
+**Current behavior:** Settings offers `kg` and `lb`; changing it persists the preference separately in LocalStorage, updates the in-memory configuration, and rerenders workout weight labels. The preference is restored on startup.
 
 **Relevant files/modules:** Unit selector in `index.html`; unit-change handler in `assets/js/app.js`; default unit in `data/config.json`.
 
-**Current limitations:** The choice is not persisted, existing or entered values are not converted, and other already-rendered views may continue to show the prior unit until rerendered.
+**Current limitations:** Existing or entered values are not converted, and other already-rendered views may continue to show the prior unit until rerendered.
 
 ## Local Data Clearing
 
@@ -123,4 +123,3 @@ The following are planned or possible directions and are not fully implemented t
 - Improved progress graphs.
 - User profiles.
 - Optional cloud synchronization.
-

@@ -2,7 +2,7 @@
 
 ## Project
 
-**Yonas Workout Tracker** is a mobile-first strength-training tracker designed for simple, fast workout logging. It is a Progressive Web App (PWA) with an offline-first approach and is currently deployed through GitHub Pages.
+**Workout Tracker** is a mobile-first strength-training tracker designed for simple, fast workout logging. It is a Progressive Web App (PWA) with an offline-first approach and is currently deployed through GitHub Pages.
 
 The current technology stack is:
 
@@ -36,4 +36,3 @@ Development takes place in Visual Studio Code. GitHub is used for source control
 - Refactors code when requested.
 - Creates or updates project files.
 - Runs relevant checks where possible.
-

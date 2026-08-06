@@ -1,6 +1,6 @@
 {
-  "name": "Yonas Workout Tracker 0.3.2",
-  "short_name": "Yonas Tracker",
+  "name": "Workout Tracker 0.3.3",
+  "short_name": "Workout Tracker",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b1220",

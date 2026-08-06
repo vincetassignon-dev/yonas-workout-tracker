@@ -1,6 +1,6 @@
 {
-  "version": "0.3.2",
-  "build": "alpha-032-structured",
-  "published": "2026-08-06",
+  "version": "0.3.3",
+  "build": "alpha-033-stabilization",
+  "published": "2026-08-07",
   "structure": "modular"
 }

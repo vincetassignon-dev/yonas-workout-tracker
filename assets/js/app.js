@@ -1,10 +1,11 @@
 // --- State ---
 
 let cfg = null;
-let log = JSON.parse(localStorage.getItem("yonasLog") || "[]");
-let currentSplit = localStorage.getItem("yonasSplit") || "Split A";
+let log = JSON.parse(localStorage.getItem("workoutLog") || "[]");
+let currentSplit = localStorage.getItem("workoutSplit") || "Split A";
 
-const APP_VERSION = "0.3.2";
+const APP_VERSION = "0.3.3";
+const UNIT_STORAGE_KEY = "workoutUnits";
 const VIEWS = ["home", "workout", "history", "progress", "settings"];
 
 const $ = (s) => document.querySelector(s);
@@ -18,13 +19,19 @@ async function loadCfg() {
   } catch (e) {
     cfg = JSON.parse(document.getElementById("fallbackConfig").textContent);
   }
+
+  const storedUnits = localStorage.getItem(UNIT_STORAGE_KEY);
+  if (["kg", "lb"].includes(storedUnits)) {
+    cfg.units = storedUnits;
+  }
+
   init();
 }
 
 // --- Storage ---
 
 function save() {
-  localStorage.setItem("yonasLog", JSON.stringify(log));
+  localStorage.setItem("workoutLog", JSON.stringify(log));
 }
 
 // --- Split rotation ---
@@ -43,7 +50,10 @@ function nextSplit() {
 
 function show(id) {
   VIEWS.forEach((v) => $("#" + v).classList.toggle("hidden", v !== id));
-  $$("nav button").forEach((b) => b.classList.toggle("active", b.dataset.view === id));
+  $$("nav button").forEach((b) =>
+    b.classList.toggle("active", b.dataset.view === id)
+  );
+
   if (id === "home") renderHome();
   if (id === "history") renderHistory();
   if (id === "progress") renderProgress();
@@ -52,7 +62,7 @@ function show(id) {
 // --- Home ---
 
 function renderHome() {
-  $("#title").textContent = cfg.client + " Workout Tracker";
+  $("#title").textContent = "Workout Tracker";
   $("#next").textContent = nextSplit();
   $("#done").textContent = log.length;
   $("#last").textContent = log.length ? log[log.length - 1].split : "—";
@@ -68,7 +78,7 @@ function renderTabs() {
   $$("#tabs button").forEach((b) => {
     b.onclick = () => {
       currentSplit = b.dataset.s;
-      localStorage.setItem("yonasSplit", currentSplit);
+      localStorage.setItem("workoutSplit", currentSplit);
       renderWorkout();
     };
   });
@@ -85,7 +95,10 @@ function renderWorkout() {
     if (e.block.startsWith("Superset") && e.block !== lastBlock) {
       html += `<div class="superset">${e.block}</div>`;
     }
-    const cls = e.block === "Main Lift" ? "main" : e.block === "Finisher" ? "finisher" : "";
+    let cls = "";
+    if (e.block === "Main Lift") cls = "main";
+    if (e.block === "Finisher") cls = "finisher";
+
     html += `<div class="exercise ${cls}" data-i="${i}">
       <h3>${e.name}</h3>
       <div class="meta">${e.block}${e.type ? " · " + e.type : ""} · ${e.focus} · ${e.target}</div>
@@ -104,11 +117,29 @@ function renderWorkout() {
 
 function saveWorkout() {
   const entries = [];
+
   $$(".exercise").forEach((c, i) => {
     const e = cfg.splits[currentSplit][i];
     const v = (f) => c.querySelector(`[data-f="${f}"]`).value.trim();
-    entries.push({ ...e, weight: v("weight"), set1: v("set1"), set2: v("set2"), set3: v("set3") });
+    entries.push({
+      ...e,
+      weight: v("weight"),
+      set1: v("set1"),
+      set2: v("set2"),
+      set3: v("set3"),
+    });
   });
+
+  const isEmpty = entries.every(
+    (entry) => !entry.weight && !entry.set1 && !entry.set2 && !entry.set3
+  );
+
+  if (
+    isEmpty &&
+    !confirm("No workout data entered. Save an empty workout anyway?")
+  ) {
+    return;
+  }
 
   log.push({ date: new Date().toISOString(), split: currentSplit, entries });
   save();
@@ -116,7 +147,7 @@ function saveWorkout() {
   setTimeout(() => ($("#msg").textContent = ""), 1500);
 
   currentSplit = nextSplit();
-  localStorage.setItem("yonasSplit", currentSplit);
+  localStorage.setItem("workoutSplit", currentSplit);
   renderWorkout();
 }
 
@@ -160,7 +191,9 @@ function getPRs() {
 
 function renderProgress() {
   if (!$("#exerciseSelect").options.length) {
-    $("#exerciseSelect").innerHTML = names().map((n) => `<option>${n}</option>`).join("");
+    $("#exerciseSelect").innerHTML = names()
+      .map((n) => `<option>${n}</option>`)
+      .join("");
   }
   draw($("#exerciseSelect").value || names()[0]);
 
@@ -232,12 +265,20 @@ function draw(name) {
 
 function exportCSV() {
   const rows = [["date", "split", "exercise", "weight", "set1", "set2", "set3"]];
+
   log.forEach((w) =>
-    w.entries.forEach((e) => rows.push([w.date, w.split, e.name, e.weight, e.set1, e.set2, e.set3]))
+    w.entries.forEach((e) =>
+      rows.push([w.date, w.split, e.name, e.weight, e.set1, e.set2, e.set3])
+    )
   );
+
   download(
-    "yonas-workout-log.csv",
-    rows.map((r) => r.map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`).join(",")).join("\n"),
+    "workout-log.csv",
+    rows
+      .map((r) =>
+        r.map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`).join(",")
+      )
+      .join("\n"),
     "text/csv"
   );
 }
@@ -271,7 +312,11 @@ $("#csvBtn").onclick = exportCSV;
 $("#exerciseSelect").onchange = () => draw($("#exerciseSelect").value);
 
 $("#exportJson").onclick = () =>
-  download("yonas-backup.json", JSON.stringify({ log, currentSplit, cfg }, null, 2), "application/json");
+  download(
+    "workout-backup.json",
+    JSON.stringify({ log, currentSplit, units: cfg.units, cfg }, null, 2),
+    "application/json"
+  );
 
 $("#importJson").onchange = (e) => {
   const f = e.target.files[0];
@@ -282,8 +327,19 @@ $("#importJson").onchange = (e) => {
       const d = JSON.parse(r.result);
       log = d.log || [];
       currentSplit = d.currentSplit || "Split A";
+
+      const importedUnits = [d.units, d.cfg?.units].find((units) =>
+        ["kg", "lb"].includes(units)
+      );
+
+      if (importedUnits) {
+        cfg.units = importedUnits;
+        localStorage.setItem(UNIT_STORAGE_KEY, importedUnits);
+      }
+
       save();
-      localStorage.setItem("yonasSplit", currentSplit);
+      localStorage.setItem("workoutSplit", currentSplit);
+      init();
       alert("Backup imported");
     } catch {
       alert("Invalid backup file");
@@ -294,6 +350,7 @@ $("#importJson").onchange = (e) => {
 
 $("#unitSelect").onchange = (e) => {
   cfg.units = e.target.value;
+  localStorage.setItem(UNIT_STORAGE_KEY, cfg.units);
   renderWorkout();
 };
 

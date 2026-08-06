@@ -1,4 +1,4 @@
-const CACHE_NAME = "yonas-alpha-032-structured";
+const CACHE_NAME = "workout-tracker-alpha-033-stabilization";
 
 const APP_SHELL = [
   "./",
