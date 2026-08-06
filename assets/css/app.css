@@ -17,6 +17,10 @@ nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#0e1728;border-
 .hidden{display:none!important}.list{display:grid;gap:8px}.historyItem{background:var(--card);border-radius:12px;padding:12px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}
 table{width:100%;border-collapse:collapse;font-size:.84rem}td,th{padding:9px;border-bottom:1px solid var(--line);text-align:left}canvas{width:100%;height:250px;background:#0e1728;border-radius:12px}
 .note{color:var(--muted);font-size:.85rem;line-height:1.45}.danger{background:#5a2430;color:#ffd9df}
+.weekly-goal.complete{border-color:rgba(84,193,139,.55);background:rgba(84,193,139,.08)}
+.weekly-goal-label{display:block;color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.08em}.weekly-goal-progress{display:block;margin-top:5px;font-size:1.15rem}
+.weekly-goal-steps{display:flex;align-items:center;margin:14px 0 10px}.weekly-goal-step{width:15px;height:15px;flex:0 0 15px;border:2px solid var(--line);border-radius:50%;background:var(--panel)}.weekly-goal-connector{height:2px;flex:1;background:var(--line)}
+.weekly-goal-step.complete,.weekly-goal-connector.complete{border-color:var(--green);background:var(--green)}.weekly-goal-message{color:var(--muted);font-size:.85rem}.weekly-goal.complete .weekly-goal-message{color:#bdebd3}
 @media(max-width:520px){.gridInputs{grid-template-columns:1fr 1fr}.gridInputs>div:first-child{grid-column:1/-1}nav button{font-size:.84rem;padding-left:1px;padding-right:1px}}
 
 .update-banner{

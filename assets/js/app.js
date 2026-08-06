@@ -6,6 +6,7 @@ let currentSplit = localStorage.getItem("workoutSplit") || "Split A";
 
 const APP_VERSION = "0.3.3";
 const UNIT_STORAGE_KEY = "workoutUnits";
+const WEEKLY_GOAL = 3;
 const VIEWS = ["home", "workout", "history", "progress", "settings"];
 
 const $ = (s) => document.querySelector(s);
@@ -61,12 +62,60 @@ function show(id) {
 
 // --- Home ---
 
+function startOfWeek(date) {
+  const start = new Date(date);
+  const daysSinceMonday = (start.getDay() + 6) % 7;
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - daysSinceMonday);
+  return start;
+}
+
+function weeklyWorkoutCount(now = new Date()) {
+  const weekStart = startOfWeek(now);
+  const nextWeekStart = new Date(weekStart);
+  nextWeekStart.setDate(nextWeekStart.getDate() + 7);
+
+  return log.filter((workout) => {
+    const workoutDate = new Date(workout.date);
+    return workoutDate >= weekStart && workoutDate < nextWeekStart;
+  }).length;
+}
+
+function weeklyGoalMessage(count) {
+  if (count === 0) return "Let's get started.";
+  if (count === 1) return "Good start. Keep going.";
+  if (count === 2) return "One more to hit your goal 💪";
+  if (count === WEEKLY_GOAL) return "Weekly goal complete! 🏆";
+  return "Goal exceeded! 🔥";
+}
+
+function renderWeeklyGoal() {
+  const count = weeklyWorkoutCount();
+  const completed = count >= WEEKLY_GOAL;
+
+  $("#weeklyGoalProgress").textContent = `${count} / ${WEEKLY_GOAL} workouts`;
+  $("#weeklyGoalMessage").textContent = weeklyGoalMessage(count);
+  $("#weeklyGoalCard").classList.toggle("complete", completed);
+  $("#weeklyGoalSteps").setAttribute(
+    "aria-valuenow",
+    Math.min(count, WEEKLY_GOAL)
+  );
+
+  $$(".weekly-goal-step").forEach((step, index) => {
+    step.classList.toggle("complete", index < count);
+  });
+  $$(".weekly-goal-connector").forEach((connector, index) => {
+    connector.classList.toggle("complete", index + 1 < count);
+  });
+}
+
 function renderHome() {
   $("#title").textContent = "Workout Tracker";
   $("#next").textContent = nextSplit();
   $("#done").textContent = log.length;
   $("#last").textContent = log.length ? log[log.length - 1].split : "—";
   $("#prCount").textContent = Object.keys(getPRs()).length;
+  renderWeeklyGoal();
 }
 
 // --- Workout ---
@@ -149,6 +198,7 @@ function saveWorkout() {
   currentSplit = nextSplit();
   localStorage.setItem("workoutSplit", currentSplit);
   renderWorkout();
+  renderHome();
 }
 
 // --- History ---

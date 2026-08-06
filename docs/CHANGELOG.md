@@ -12,6 +12,7 @@ This changelog records only milestones supported by the repository and its Git h
 - Aligned displayed, fallback, manifest, version, build, and cache identifiers for Alpha 0.3.3.
 - Persisted the `kg` or `lb` preference separately in LocalStorage and included it in backup restore behavior.
 - Added confirmation before saving a completely empty workout while allowing partial workouts.
+- Added a Home card showing timestamp-derived progress toward a fixed goal of three workouts per week.
 - Removed project-specific naming from application content, metadata, configuration, downloads, cache naming, and documentation.
 - Renamed LocalStorage keys as a clean cutover. Data stored under the previous branded keys is intentionally not migrated.
 

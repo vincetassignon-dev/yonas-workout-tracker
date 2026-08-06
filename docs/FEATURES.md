@@ -32,6 +32,16 @@ This document describes behavior verified in the current repository. Planned wor
 
 **Current limitations:** Field values are not otherwise validated, and there is no interface to edit or delete an individual saved workout.
 
+## Weekly Workout Goal
+
+**Purpose:** Show progress toward a simple target of three workouts per week.
+
+**Current behavior:** The Home view counts saved workouts dated from Monday 00:00 local time through the following Monday and displays the actual count against a fixed target of three. A three-step indicator, contextual message, and subtle completed state update whenever Home renders. The count is derived from workout history and is not stored separately.
+
+**Relevant files/modules:** Weekly Goal markup in `index.html`, Home calculation and rendering logic in `assets/js/app.js`, and Weekly Goal styles in `assets/css/app.css`.
+
+**Current limitations:** The target is fixed at three workouts. Goals are not configurable, and streaks or achievements are not implemented.
+
 ## Local Workout Storage
 
 **Purpose:** Keep workout data on the device without requiring an account or server.

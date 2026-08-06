@@ -29,6 +29,18 @@
     <div class="metric"><small>Last workout</small><strong id="last">—</strong></div>
     <div class="metric"><small>Personal records</small><strong id="prCount">0</strong></div>
   </div></div>
+  <div class="card weekly-goal" id="weeklyGoalCard">
+    <small class="weekly-goal-label">WEEKLY GOAL</small>
+    <strong class="weekly-goal-progress" id="weeklyGoalProgress">0 / 3 workouts</strong>
+    <div class="weekly-goal-steps" id="weeklyGoalSteps" role="progressbar" aria-label="Weekly workout goal" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0">
+      <span class="weekly-goal-step"></span>
+      <span class="weekly-goal-connector"></span>
+      <span class="weekly-goal-step"></span>
+      <span class="weekly-goal-connector"></span>
+      <span class="weekly-goal-step"></span>
+    </div>
+    <div class="weekly-goal-message" id="weeklyGoalMessage">Let's get started.</div>
+  </div>
   <div class="card"><button class="primary full" id="startBtn">Start next workout</button></div>
   <div class="card"><div class="note"><b>Push</b> = chest and triceps. <b>Pull</b> = back and biceps. Yellow rows mark supersets.</div></div>
 </section>
